@@ -3,5 +3,5 @@ version: 1.0
 name: HeroWorld
 
 commands:
-  SetWorld:
-    description: Setzt die HeroWorld
+  HReload:
+    description: Reloadet Die Config vom Plugin

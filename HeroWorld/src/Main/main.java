@@ -14,6 +14,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import HeroCommands.CMDreload;
+import commands.CMDMySQLdisConnect;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,8 +35,8 @@ public class main extends JavaPlugin implements Listener
 	
 	
 	
-	public static File Friends;
-	public static FileConfiguration Frdb;
+	public static File Friends2;
+	public static FileConfiguration Frdb2;
 	
 	
 	
@@ -45,20 +47,24 @@ public class main extends JavaPlugin implements Listener
 	public void onEnable() {
 		Bukkit.getPluginManager().registerEvents(this, this);
 
-		new Main.HeroWorldEvent(this);
+		
+		this.getCommand("HReload").setExecutor(new CMDreload());
+		
+		new HeroWorldEvent(this);
 		
 		
 		
-		
-		main.Friends = new File("plugins/HeroWorld","FriendsDB.yml");
-    	main.Frdb = YamlConfiguration.loadConfiguration(main.Friends); 
+		main.Friends2 = new File("plugins/HeroWorld","FriendsDB.yml");
+    	main.Frdb2 = YamlConfiguration.loadConfiguration(main.Friends2); 
 	}
 	
-	
+	public static void reload() {
+		main.Frdb2 = YamlConfiguration.loadConfiguration(main.Friends2);
+	}
 	
 	public void onDisable() {
 		try {
-			Frdb.save(Friends);
+			Frdb2.save(Friends2);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -1,5 +1,6 @@
 package Main;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,7 +12,7 @@ import org.bukkit.inventory.meta.*;
 import org.bukkit.inventory.*;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-
+import org.bukkit.util.Vector;
 
 import net.md_5.bungee.api.ChatColor;
 
@@ -36,8 +37,8 @@ public class HeroWorldEvent implements Listener{
 	@EventHandler
 	public void getWorld(PlayerTeleportEvent ev) {
 		Player p = ev.getPlayer();
-		if(main.Frdb.getStringList("config.GetWorlds").contains(p.getWorld().getName())) {
-			main.Frdb.set(p.getName()+".isAnHero", true);
+		if(main.Frdb2.getStringList("config.GetWorlds").contains(p.getWorld().getName())) {
+			main.Frdb2.set(p.getName()+".isAnHero", true);
 			
 			ItemStack Lore = new ItemStack(Material.MINECART);
 			ItemMeta MLore = Lore.getItemMeta();
@@ -48,13 +49,13 @@ public class HeroWorldEvent implements Listener{
 			
 			ItemStack Head = new ItemStack(Material.PLAYER_HEAD);
 			SkullMeta HeadMeta = (SkullMeta) Head.getItemMeta();
-			HeadMeta.setOwner(Main.main.Frdb.getString(ev.getPlayer().getName()+".Power"));
+			HeadMeta.setOwner(main.Frdb2.getString(ev.getPlayer().getName()+".Power"));
 			Head.setItemMeta(HeadMeta);
 			ev.getPlayer().getInventory().setHelmet(Head);
 			int Count = 0; 
-			for(String s : Main.main.Frdb.getStringList("Heros."+Main.main.Frdb.getString(ev.getPlayer().getName()+".Power")+".Items")) {
+			for(String s : main.Frdb2.getStringList("Heros."+main.Frdb2.getString(ev.getPlayer().getName()+".Power")+".Items")) {
 		
-				if(Main.main.Frdb.getBoolean(Main.main.Frdb.getString("Heros."+ev.getPlayer().getName()+".Power")+".Item."+s+".hasEnchant")) {
+				if(main.Frdb2.getBoolean(main.Frdb2.getString("Heros."+ev.getPlayer().getName()+".Power")+".Item."+s+".hasEnchant")) {
 					Items.ItemBuilder.Builder(true, Material.getMaterial(s), p,s,Count);
 					
 				}else {
@@ -65,7 +66,7 @@ public class HeroWorldEvent implements Listener{
 			
 			
 		}else {
-			main.Frdb.set(p.getName()+".isAnHero", false);
+			main.Frdb2.set(p.getName()+".isAnHero", false);
 		}
 	}
 	@EventHandler
@@ -85,16 +86,16 @@ public class HeroWorldEvent implements Listener{
 			p.sendMessage(Item.getItemMeta().getDisplayName());
 			boolean Changes = false;
 			String Powers = null;
-			for(String s: Main.main.Frdb.getStringList("config.Heros")) { 
+			for(String s: main.Frdb2.getStringList("config.Heros")) { 
 				if(Item.getItemMeta().getDisplayName().contains(s)) {
-					Main.main.Frdb.set(p.getName()+".Power", s);
+					main.Frdb2.set(p.getName()+".Power", s);
 					
 					
 					
 					
 					ItemStack Head = new ItemStack(Material.PLAYER_HEAD);
 					SkullMeta HeadMeta = (SkullMeta) Head.getItemMeta();
-					HeadMeta.setOwner(Main.main.Frdb.getString(p.getName()+".Power"));
+					HeadMeta.setOwner(main.Frdb2.getString(p.getName()+".Power"));
 					Head.setItemMeta(HeadMeta);
 					p.getInventory().setHelmet(Head);
 					p.sendMessage("Du hast nun die Power von "+s);
@@ -114,9 +115,9 @@ public class HeroWorldEvent implements Listener{
 				for(PotionEffect potion: p.getActivePotionEffects()) {
 					p.removePotionEffect(potion.getType());
 				}
-				for(String s : Main.main.Frdb.getStringList("Heros."+Powers+".Items")) {
+				for(String s : main.Frdb2.getStringList("Heros."+Powers+".Items")) {
 					
-						if(Main.main.Frdb.getBoolean("Heros."+Powers+".Item."+s+".hasEnchant")) {
+						if(main.Frdb2.getBoolean("Heros."+Powers+".Item."+s+".hasEnchant")) {
 							Items.ItemBuilder.Builder(true, Material.getMaterial(s), p,s,Count);
 							
 						}else {
@@ -144,21 +145,37 @@ public class HeroWorldEvent implements Listener{
 	
 	@EventHandler
 	public void MoveEvent(PlayerMoveEvent ev) {
-		if(main.Frdb.getBoolean(ev.getPlayer().getName()+".isAnHero")){
-			String Power = main.Frdb.getString(ev.getPlayer().getName()+".Power");
-			
+		if(main.Frdb2.getBoolean(ev.getPlayer().getName()+".isAnHero")){
+			String Power = main.Frdb2.getString(ev.getPlayer().getName()+".Power");
+			if(main.Frdb2.getBoolean("Heros."+Power+".CanWalkOnWater")) {
+				Player p = ev.getPlayer();
+				if(p.getWorld().getBlockAt(p.getLocation().getBlockX(), p.getLocation().getBlockY()-1, p.getLocation().getBlockZ()).getType()==Material.WATER||p.getWorld().getBlockAt(p.getLocation().getBlockX(), p.getLocation().getBlockY()-1, p.getLocation().getBlockZ()).getType()==Material.LEGACY_STATIONARY_WATER) {
+					if(p.getWorld().getBlockAt(p.getLocation().getBlockX(), p.getLocation().getBlockY(), p.getLocation().getBlockZ()).getType()==Material.WATER||p.getWorld().getBlockAt(p.getLocation().getBlockX(), p.getLocation().getBlockY(), p.getLocation().getBlockZ()).getType()==Material.LEGACY_STATIONARY_WATER) {
+						Location L =p.getLocation();
+						L.setY(p.getLocation().getY()+1);
+						Vector vec = p.getVelocity();
+						p.teleport(L);
+						p.setVelocity(vec);
+					}
+						
+					
+					
+					
+				}
+			}
 			if(Power==null||Power=="") {
 				ev.getPlayer().sendMessage(ChatColor.RED+"Du Besitzt Leider noch keine Power, bitte Such dir eine im Menu aus");
 			ev.setCancelled(true);
 			}else {
 				boolean exist = false;
-				for(String s : main.Frdb.getStringList("config.Heros")) {
+				for(String s : main.Frdb2.getStringList("config.Heros")) {
 					if(s.equalsIgnoreCase(Power)) {
 						exist = true;}}
 				if(exist) {
-					for(String s : main.Frdb.getStringList("config.Power."+Power)) {
+					for(String s : main.Frdb2.getStringList("config.Power."+Power)) {
 						Player p = ev.getPlayer();
-						PotionEffect Poition = new PotionEffect(PotionEffectType.getByName(main.Frdb.getString("Heros."+Power+"."+s+".Type")) ,10000,main.Frdb.getInt("Heros."+Power+"."+s+".Power"));
+						PotionEffect Poition = new PotionEffect(PotionEffectType.getByName(main.Frdb2.getString("Heros."+Power+"."+s+".Type")) ,10000,main.Frdb2.getInt("Heros."+Power+"."+s+".Power"));
 						p.addPotionEffect(Poition);
+						
 						
 					}}}}}}
