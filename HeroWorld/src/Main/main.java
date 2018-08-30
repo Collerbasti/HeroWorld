@@ -50,7 +50,7 @@ public class main extends JavaPlugin implements Listener
 		
 		
 		
-		main.Friends = new File("plugins/Noneless","FriendsDB.yml");
+		main.Friends = new File("plugins/HeroWorld","FriendsDB.yml");
     	main.Frdb = YamlConfiguration.loadConfiguration(main.Friends); 
 	}
 	
