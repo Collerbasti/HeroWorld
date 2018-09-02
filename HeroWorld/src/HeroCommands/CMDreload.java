@@ -6,7 +6,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import Main.main;
-import net.minecraft.server.v1_13_R1.Enchantment;
 
 public class CMDreload implements CommandExecutor {
 
@@ -21,3 +20,4 @@ public class CMDreload implements CommandExecutor {
 	}
 
 }
+ 
