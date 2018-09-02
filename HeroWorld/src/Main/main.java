@@ -12,10 +12,11 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import HeroCommands.CMDreload;
-import commands.CMDMySQLdisConnect;
+import net.milkbowl.vault.economy.Economy;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,14 +38,24 @@ public class main extends JavaPlugin implements Listener
 	
 	public static File Friends2;
 	public static FileConfiguration Frdb2;
+	public static File Shop;
+	public static FileConfiguration Shp;
 	
-	
-	
+	private static Economy econ = null;
+	public static Economy economy;
 	
 	
 	@Override	
 
 	public void onEnable() {
+		
+		
+		if(!setupEconomy()) {
+			Bukkit.shutdown();
+		}
+		
+		
+		
 		Bukkit.getPluginManager().registerEvents(this, this);
 
 		
@@ -56,10 +67,30 @@ public class main extends JavaPlugin implements Listener
 		
 		main.Friends2 = new File("plugins/HeroWorld","FriendsDB.yml");
     	main.Frdb2 = YamlConfiguration.loadConfiguration(main.Friends2); 
+    	
+    	main.Shop = new File("plugins/HeroWorld","Shop.yml");
+    	main.Shp = YamlConfiguration.loadConfiguration(main.Shop); 
 	}
+	
+	
+	
+	  private boolean setupEconomy() {
+	        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+	            return false;
+	        }
+	        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+	        if (rsp == null) {
+	            return false;
+	        }
+	        econ = rsp.getProvider();
+	        return econ != null;
+	    }
+	
+	
 	
 	public static void reload() {
 		main.Frdb2 = YamlConfiguration.loadConfiguration(main.Friends2);
+		main.Shp = YamlConfiguration.loadConfiguration(main.Shop); 
 	}
 	
 	public void onDisable() {

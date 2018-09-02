@@ -1,5 +1,7 @@
 package Main;
 
+import java.awt.Menu;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -13,6 +15,9 @@ import org.bukkit.inventory.*;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
+import Menu.HeroMenu;
+import Menu.Shop;
+
 
 import net.md_5.bungee.api.ChatColor;
 
@@ -72,7 +77,7 @@ public class HeroWorldEvent implements Listener{
 	@EventHandler
 	public void InteracktEvent(PlayerInteractEvent ev) {
 		if(ev.getItem().getItemMeta().getDisplayName().equals("HeroWorld Menu")) {
-			Menu.HeroMenu.Summon(ev.getPlayer());
+			HeroMenu.Summon(ev.getPlayer());
 		}
 	}
 	
@@ -81,6 +86,14 @@ public class HeroWorldEvent implements Listener{
 	public void ItemUse(InventoryClickEvent ev) {
 		Player p = (Player) ev.getWhoClicked();
 		ItemStack Item = ev.getCurrentItem();
+		
+		if(Item.getItemMeta().getDisplayName().contains("Shop")) {
+			Shop.Spawner(p);
+		}
+		
+		
+		
+		
 		
 		if(Item.getItemMeta().getDisplayName().contains("Hero:")) {
 			p.sendMessage(Item.getItemMeta().getDisplayName());

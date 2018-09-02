@@ -5,9 +5,17 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import com.iCo6.iConomy;
+
 import net.md_5.bungee.api.ChatColor;
+import net.milkbowl.vault.Vault;
+import net.milkbowl.vault.VaultEco;
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.economy.EconomyResponse;
+import net.milkbowl.vault.economy.plugins.Economy_eWallet;
 
 public class HeroMenu {
 	
@@ -27,9 +35,12 @@ public class HeroMenu {
 				
 				
 			}
+			ItemStack Shop = new ItemStack(Material.GOLD_NUGGET);
+			ItemMeta MShop = Shop.getItemMeta();
+			MShop.setDisplayName("Shop");
+			Shop.setItemMeta(MShop);
+			Menue.setItem(26, Shop);
 			p.openInventory(Menue);
-			
-			
 			
 			
 			
