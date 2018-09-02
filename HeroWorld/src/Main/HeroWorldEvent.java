@@ -74,6 +74,14 @@ public class HeroWorldEvent implements Listener{
 			main.Frdb2.set(p.getName()+".isAnHero", false);
 		}
 	}
+	
+	@EventHandler
+	public void disconnect(PlayerQuitEvent ev) {
+		main.Frdb2.set(ev.getPlayer().getName()+".isAnHero", false);
+	}
+	
+	
+	
 	@EventHandler
 	public void InteracktEvent(PlayerInteractEvent ev) {
 		if(ev.getItem().getItemMeta().getDisplayName().equals("HeroWorld Menu")) {

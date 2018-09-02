@@ -94,6 +94,9 @@ public class main extends JavaPlugin implements Listener
 	}
 	
 	public void onDisable() {
+		for(Player p: Bukkit.getOnlinePlayers() ) {
+			main.Frdb2.set(p.getName()+".isAnHero", false);
+		}
 		try {
 			Frdb2.save(Friends2);
 		} catch (IOException e) {
