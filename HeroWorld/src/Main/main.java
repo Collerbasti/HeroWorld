@@ -41,6 +41,18 @@ public class main extends JavaPlugin implements Listener
 	public static File Shop;
 	public static FileConfiguration Shp;
 	
+	public static File Custom1;
+	public static FileConfiguration Cs1;
+	
+	public static File Custom2;
+	public static FileConfiguration Cs2;
+	
+	public static File Custom3;
+	public static FileConfiguration Cs3;
+	
+	public static File Temp;
+	public static FileConfiguration tmp;
+	
 	private static Economy econ = null;
 	public static Economy economy;
 	
@@ -70,6 +82,18 @@ public class main extends JavaPlugin implements Listener
     	
     	main.Shop = new File("plugins/HeroWorld","Shop.yml");
     	main.Shp = YamlConfiguration.loadConfiguration(main.Shop); 
+    	
+    	main.Custom1 = new File("plugins/HeroWorld","Hero1.yml");
+    	main.Cs1 = YamlConfiguration.loadConfiguration(main.Custom1); 
+    	
+    	main.Custom2 = new File("plugins/HeroWorld","Hero2.yml");
+    	main.Cs2 = YamlConfiguration.loadConfiguration(main.Custom2); 
+    	
+    	main.Custom3 = new File("plugins/HeroWorld","Hero3.yml");
+    	main.Cs3 = YamlConfiguration.loadConfiguration(main.Custom3); 
+    	
+    	main.Temp = new File("plugins/HeroWorld","Temp.yml");
+    	main.tmp = YamlConfiguration.loadConfiguration(main.Temp); 
 	}
 	
 	
@@ -91,7 +115,10 @@ public class main extends JavaPlugin implements Listener
 	public static void reload() {
 		main.Frdb2 = YamlConfiguration.loadConfiguration(main.Friends2);
 		main.Shp = YamlConfiguration.loadConfiguration(main.Shop); 
-	}
+    	main.Cs1 = YamlConfiguration.loadConfiguration(main.Custom1); 
+    	main.Cs2 = YamlConfiguration.loadConfiguration(main.Custom2);
+    	main.Cs3 = YamlConfiguration.loadConfiguration(main.Custom3); 
+		}
 	
 	public void onDisable() {
 		for(Player p: Bukkit.getOnlinePlayers() ) {
@@ -99,6 +126,27 @@ public class main extends JavaPlugin implements Listener
 		}
 		try {
 			Frdb2.save(Friends2);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			Cs1.save(Custom1);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			Cs2.save(Custom2);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			Cs3.save(Custom3);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
