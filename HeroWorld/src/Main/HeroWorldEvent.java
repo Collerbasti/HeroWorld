@@ -79,7 +79,7 @@ public class HeroWorldEvent implements Listener{
 	public void disconnect(PlayerQuitEvent ev) {
 		main.Frdb2.set(ev.getPlayer().getName()+".isAnHero", false);
 	}
-	
+	 
 	
 	
 	@EventHandler
