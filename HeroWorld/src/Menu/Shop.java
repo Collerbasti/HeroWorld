@@ -2,6 +2,7 @@ package Menu;
 
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -26,6 +27,13 @@ public class Shop {
 		
 		Shop.addItem(Coin);
 		
+		ItemStack Test = new ItemStack(Material.SKELETON_SKULL);
+		ItemMeta MTest = Test.getItemMeta();
+		MTest.setDisplayName("Testen");
+		Test.setItemMeta(MTest);
+		
+		Shop.addItem(Test);
+		
 		
 		ItemStack Aussehen = new ItemStack(Material.PLAYER_HEAD);
 		SkullMeta MAus = (SkullMeta) Aussehen.getItemMeta();
@@ -37,23 +45,39 @@ public class Shop {
 			if(!Main.main.Cs1.isSet(p.getName()+".Name")) {
 				MAus.setDisplayName("Noch nicht Gesetzt");
 			}else {
-				MAus.setOwner(Main.main.Cs1.getString(p.getName()+".Owner"));
 				MAus.setDisplayName(Main.main.Cs1.getString(p.getName()+".Name"));
+			}
+			if(!Main.main.Cs1.isSet(p.getName()+".Owner")) {
+				
+			}else {
+				MAus.setOwningPlayer(Bukkit.getPlayer(Main.main.Cs1.getString(p.getName()+".Owner")));
 			}
 		}else if(Held.equals("Cs2")) {
 			if(!Main.main.Cs2.isSet(p.getName()+".Name")) {
 				MAus.setDisplayName("Noch nicht Gesetzt");
 			}else {
-				MAus.setOwner(Main.main.Cs2.getString(p.getName()+".Owner"));
 				MAus.setDisplayName(Main.main.Cs2.getString(p.getName()+".Name"));
-			}	
+			}
+			if(!Main.main.Cs2.isSet(p.getName()+".Owner")) {
+				
+			}else {
+				MAus.setOwningPlayer(Bukkit.getPlayer(Main.main.Cs2.getString(p.getName()+".Owner")));
+				
+			}
 		}else if(Held.equals("Cs3")) {
 			if(!Main.main.Cs3.isSet(p.getName()+".Name")) {
 				MAus.setDisplayName("Noch nicht Gesetzt");
 			}else {
-				MAus.setOwner(Main.main.Cs3.getString(p.getName()+".Owner"));
 				MAus.setDisplayName(Main.main.Cs3.getString(p.getName()+".Name"));
-			}	
+			}
+			
+			if(!Main.main.Cs3.isSet(p.getName()+".Owner")) {
+				
+			}else {
+				MAus.setOwningPlayer(Bukkit.getPlayer(Main.main.Cs3.getString(p.getName()+".Owner")));
+				
+			}
+			
 		}
 		Aussehen.setItemMeta(MAus);
 		Shop.addItem(Aussehen);
@@ -98,26 +122,34 @@ public class Shop {
 		
 	}
 	public static void Fähigkeiten(String Hero, Player p) {
+		
 		Inventory Shop = p.getServer().createInventory(null, 27,p.getName()+"§b Fähigkeiten von: "+Hero);
-		for(String s :Main.main.Frdb2.getStringList("Config.CustomHeros.Abilitys.List")) {
+		for(String s :Main.main.Frdb2.getStringList("config.CustomHeros.Abilitys.List")) {
 			Material mat;
-			if(Main.main.Frdb2.getString("Config.CustomHeros.Abilitys."+s+".Material").contains("FIRE_CHARGE")) {
+			if(Main.main.Frdb2.getString("config.CustomHeros.Abilitys."+s+".Material").contains("FIRE_CHARGE")) {
 				mat = Material.FIRE_CHARGE;
-			}else if(Main.main.Frdb2.getString("Config.CustomHeros.Abilitys."+s+".Material").contains("SHIELD")) {
+			}else if(Main.main.Frdb2.getString("config.CustomHeros.Abilitys."+s+".Material").contains("SHIELD")) {
 				mat = Material.SHIELD;
 			}else  {
 				mat = Material.WHITE_WOOL;
-		}
+				}
 			ItemStack Power = new ItemStack(mat);
 			ItemMeta MPower = Power.getItemMeta();
 			MPower.setDisplayName(s);
 			ArrayList<String> Friends = new ArrayList<String>();
-			if(Main.main.Frdb2.getBoolean("Config.CustomHeros.Abilitys."+s+".Multi")) {
+			if(Main.main.Frdb2.getBoolean("config.CustomHeros.Abilitys."+s+".Multi")) {
 			Friends.add("Klicken um Einen Hinzuzufügen");
 			
 			Friends.add("Rechts Klick um einen abzuziehen");
-			
-			Friends.add(Main.main.Cs1.getString(p.getName()+".Abilitys."+s+".Wert"));
+			if(Hero.equals("Cs1")) {
+				Friends.add(Main.main.Cs1.getString(p.getName()+".Abilitys."+s+".Count"));
+				}
+			if(Hero.equals("Cs2")) {
+				Friends.add(Main.main.Cs2.getString(p.getName()+".Abilitys."+s+".Count"));
+				}
+			if(Hero.equals("Cs3")) {
+				Friends.add(Main.main.Cs3.getString(p.getName()+".Abilitys."+s+".Count"));
+				}
 			}else {
 				if(Hero.equals("Cs1")) {
 					if(Main.main.Cs1.getBoolean(p.getName()+".Abilitys."+s+".isSet")) {
@@ -145,17 +177,17 @@ public class Shop {
 					Friends.add("Klicken um zu Aktivieren");
 					}
 				}
+			
+			}
 			MPower.setLore(Friends);
 			Power.setItemMeta(MPower);
 			Shop.addItem(Power);
-			}
-			p.openInventory(Shop);
 			
 			
 			
 			
 		}
-		
+		p.openInventory(Shop);	
 		
 	}
 	
