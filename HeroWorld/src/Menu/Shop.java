@@ -50,7 +50,7 @@ public class Shop {
 			if(!Main.main.Cs1.isSet(p.getName()+".Owner")) {
 				
 			}else {
-				MAus.setOwningPlayer(Bukkit.getPlayer(Main.main.Cs1.getString(p.getName()+".Owner")));
+				MAus.setOwner(Main.main.Cs1.getString(p.getName()+".Owner"));
 			}
 		}else if(Held.equals("Cs2")) {
 			if(!Main.main.Cs2.isSet(p.getName()+".Name")) {
@@ -61,7 +61,7 @@ public class Shop {
 			if(!Main.main.Cs2.isSet(p.getName()+".Owner")) {
 				
 			}else {
-				MAus.setOwningPlayer(Bukkit.getPlayer(Main.main.Cs2.getString(p.getName()+".Owner")));
+				MAus.setOwner(Main.main.Cs2.getString(p.getName()+".Owner"));
 				
 			}
 		}else if(Held.equals("Cs3")) {
@@ -74,7 +74,7 @@ public class Shop {
 			if(!Main.main.Cs3.isSet(p.getName()+".Owner")) {
 				
 			}else {
-				MAus.setOwningPlayer(Bukkit.getPlayer(Main.main.Cs3.getString(p.getName()+".Owner")));
+				MAus.setOwner(Main.main.Cs3.getString(p.getName()+".Owner"));
 				
 			}
 			
@@ -91,7 +91,6 @@ public class Shop {
 	public static void Spawner(Player p) {
 		Inventory Shop = p.getServer().createInventory(null, 27,p.getName()+"§b Effekt Shop");
 		for(String s :Main.main.Shp.getStringList("config.Kategorien")) {
-		p.sendMessage(Material.GOLD_NUGGET.toString());
 			if(Main.main.Shp.getString(s+".Material").equalsIgnoreCase("Player_HEAD")) {
 				
 				
@@ -100,7 +99,15 @@ public class Shop {
 				MetaKat.setDisplayName(Main.main.Shp.getString(s+".Name"));
 				Kategorie.setItemMeta(MetaKat);
 				Shop.addItem(Kategorie);
-			}else {
+			}else if(Main.main.Shp.getString(s+".Material").equalsIgnoreCase("GOLD_NUGGET")) {
+				ItemStack Kategorie = new ItemStack(Material.GOLD_NUGGET);
+				ItemMeta MetaKat =  Kategorie.getItemMeta();
+				MetaKat.setDisplayName(Main.main.Shp.getString(s+".Name"));
+				Kategorie.setItemMeta(MetaKat);
+				Shop.addItem(Kategorie);	
+			}
+			
+			else {
 			ItemStack Kategorie = new ItemStack(Material.PLAYER_HEAD);
 			ItemMeta MetaKat = Kategorie.getItemMeta();
 			MetaKat.setDisplayName(Main.main.Shp.getString(s+".Name"));
@@ -113,14 +120,46 @@ public class Shop {
 		p.openInventory(Shop);
 		
 		
-		
-		
-		
-		
-		
-		
-		
 	}
+		
+	public static void Kaufen(Player p) {
+		Inventory Kaufen = p.getServer().createInventory(null, 27,p.getName()+" Kaufen");
+		for(String s :Main.main.Kauf.getStringList("config.Player")) {
+			if(!p.getName().equals(s)) {
+			
+				ItemStack Head = new ItemStack(Material.PLAYER_HEAD);
+				SkullMeta SHead = (SkullMeta) Head.getItemMeta();
+				SHead.setDisplayName(s);
+				SHead.setOwner(s);
+				Head.setItemMeta(SHead);
+				Kaufen.addItem(Head);
+				
+			}
+		}
+		p.openInventory(Kaufen);
+	}
+	public static void PlayerKaufen(Player p,Player p2) {
+		Inventory Kaufen = p.getServer().createInventory(null, 27,p.getName()+" Kaufen von "+p2.getName());
+		Main.main.Kauf.set(p.getName()+".Klicked.1", p2.getName());
+		for(String s :Main.main.Kauf.getStringList(p2.getName()+".Helden")) {
+			if(!p.getName().equals(s)) {
+			
+				ItemStack Head = new ItemStack(Material.PLAYER_HEAD);
+				SkullMeta SHead = (SkullMeta) Head.getItemMeta();
+				SHead.setDisplayName(s);
+				SHead.setOwner(s);
+				Head.setItemMeta(SHead);
+				Kaufen.addItem(Head);
+				
+			}
+		}
+		p.openInventory(Kaufen);
+	}
+		
+		
+		
+		
+	
 	public static void Fähigkeiten(String Hero, Player p) {
 		
 		Inventory Shop = p.getServer().createInventory(null, 27,p.getName()+"§b Fähigkeiten von: "+Hero);

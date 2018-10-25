@@ -1,9 +1,10 @@
 package Main;
-
+//Das Neue vom neuen 
 import java.awt.Menu;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -17,6 +18,7 @@ import org.bukkit.inventory.meta.*;
 import org.bukkit.inventory.*;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 import org.bukkit.util.Vector;
 import Menu.HeroMenu;
 import Menu.Shop;
@@ -192,7 +194,15 @@ public class HeroWorldEvent implements Listener{
 			Abilitys.addAll(Main.main.Frdb2.getStringList("config.CustomHeros.Abilitys.List"));
 			p.sendMessage(Abilitys.toString());
 			if(Main.main.Frdb2.getStringList("config.CustomHeros.Abilitys.List").contains(Item.getItemMeta().getDisplayName())) {
-				
+				boolean Bezahlt = false;
+				if(main.econ.hasAccount(p)) {
+					if(main.econ.getBalance(p)>1000) {
+						p.sendMessage("Dir Wurden 1000 ECoins abgezogen");	
+						main.econ.withdrawPlayer(p, 1000);
+						Bezahlt = true;
+					}
+				}
+				if(Bezahlt) {
 				if(!Main.main.Frdb2.getBoolean("config.CustomHeros.Abilitys."+Item.getItemMeta().getDisplayName()+".Multi")) {
 				
 					ev.setCancelled(true);
@@ -285,7 +295,7 @@ public class HeroWorldEvent implements Listener{
 				
 				
 				
-				
+			}
 				
 			}
 			}else {
@@ -309,9 +319,12 @@ public class HeroWorldEvent implements Listener{
 					main.Frdb2.set(p.getName()+".Power", "CustomHero:Cs3_"+Main.main.Cs3.getString(p.getName()+".Name"));
 					
 				} 
-				p.sendMessage("dann Teste den mal");
+				p.sendMessage("Dann Teste den mal");
+				p.closeInventory();
+				for(PotionEffect Potion: p.getActivePotionEffects()) {
 				
-				
+					p.removePotionEffect(Potion.getType());
+				}
 			}
 				
 				
@@ -333,12 +346,44 @@ public class HeroWorldEvent implements Listener{
 			}
 		}
 		
+		if(p.getInventory().getName().equals(p.getName()+" Kaufen")) {
+			if(ev.getCurrentItem().getType().equals(Material.PLAYER_HEAD)) {
+				Shop.PlayerKaufen(p, Bukkit.getPlayer(ev.getCurrentItem().getItemMeta().getDisplayName()));
+			}
+		}
+		
+		if(p.getInventory().getName().equals(p.getName()+" Kaufen von "+Main.main.Kauf.getString(p.getName()+".Klicked.1"))) {
+			if(Main.main.Kauf.getStringList(Main.main.Kauf.getString(p.getName()+".Klicked.1")).contains(ev.getCurrentItem().getItemMeta().getDisplayName())){
+				String P2 = Main.main.Kauf.getString(p.getName()+".Klicked.1");
+				String Held = ev.getCurrentItem().getItemMeta().getDisplayName();
+				if(main.econ.getBalance(p)>Main.main.Kauf.getDouble(P2+"."+Held+".Wert")) {
+				p.sendMessage("Du hast "+Held+" von "+ P2+" für "+Main.main.Kauf.getDouble(P2+"."+Held+".Wert")+" gekauft");
+				ArrayList<String> Hero = new ArrayList<String>();
+				Hero.addAll(Main.main.Kauf.getStringList(p.getName()+".GekaufteHelden.Helden"));
+				Hero.add(Held);
+				Main.main.Kauf.set(p.getName()+".GekaufteHelden.Helden", Hero);
+				Main.main.Kauf.set(p.getName()+".GekaufteHelden."+Held+".Owner",P2);
+				
+				}else {
+					p.sendMessage("Sorry aber du hast nicht genug Geld, du brauchst mindestens "+Main.main.Kauf.getDouble(P2+"."+Held+".Wert"));
+
+				}
+				
+				
+			}
+		}
+		
+		
 		
 		if(p.getInventory().getName().equals(p.getName()+"§b Effekt Shop")) {
-			
+			if(Item.getItemMeta().getDisplayName().contains("Kaufen")) {
+				Shop.Kaufen(p);
+				p.sendMessage("Kauf Dir Dein Held");
+			}
 			ArrayList<String> Kat = new ArrayList<String>();
 					 Kat.addAll(Main.main.Shp.getStringList("config.Abilytis"));
 			if(Kat.contains(ev.getCurrentItem().getItemMeta().getDisplayName())) {
+				
 				if(Item.getItemMeta().getDisplayName().equalsIgnoreCase("CustomHeld_1")) {
 				Shop.Fähigkeiten("Cs1", p);
 					}
@@ -382,9 +427,13 @@ public class HeroWorldEvent implements Listener{
 					Main.main.tmp.set(p.getName()+".Hero", "Cs1");
 					Main.main.tmp.set(p.getName()+".LeftClick", ev.getClick().isLeftClick());
 				if(ev.getClick().isLeftClick()) {
+					ev.setCancelled(true);
 					p.sendMessage("Passe den Namen jetzt an indem du diesen ohne / oder Ähnlichem in den Chat schreibst");
+					p.closeInventory();
 				}else {
+					ev.setCancelled(true);
 					p.sendMessage("Passe den Skin jetzt an indem du den Namen eines Spielers ohne / oder Ähnlichem in den Chat schreibst");
+					p.closeInventory();
 				}
 				}
 				
@@ -394,8 +443,10 @@ public class HeroWorldEvent implements Listener{
 					Main.main.tmp.set(p.getName()+".LeftClick", ev.getClick().isLeftClick());
 				if(ev.getClick().isLeftClick()) {
 					p.sendMessage("Passe den Namen jetzt an indem du diesen ohne / oder Ähnlichem in den Chat schreibst");
+					p.closeInventory();
 				}else {
 					p.sendMessage("Passe den Skin jetzt an indem du den Namen eines Spielers ohne / oder Ähnlichem in den Chat schreibst");
+					p.closeInventory();
 				}
 				}
 				
@@ -405,8 +456,10 @@ public class HeroWorldEvent implements Listener{
 					Main.main.tmp.set(p.getName()+".LeftClick", ev.getClick().isLeftClick());
 				if(ev.getClick().isLeftClick()) {
 					p.sendMessage("Passe den Namen jetzt an indem du diesen ohne / oder Ähnlichem in den Chat schreibst");
+					p.closeInventory();
 				}else {
 					p.sendMessage("Passe den Skin jetzt an indem du den Namen eines Spielers ohne / oder Ähnlichem in den Chat schreibst");
+					p.closeInventory();
 				}
 				}
 			}
@@ -491,28 +544,29 @@ public class HeroWorldEvent implements Listener{
 					Custom = "Cs3";
 				}
 				
-				FileConfiguration File;
+				Integer File;
 				for(String s:Main.main.Frdb2.getStringList("config.CustomHeros.Abilitys.List")) {
 					if(Custom.equals("Cs1")) {
-						 File = Main.main.Cs1;
+						 File = Main.main.Cs1.getInt(ev.getPlayer().getName()+".Abilitys."+s+".Count");
 							}else if(Custom.equals("Cs2")) {
-								 File = Main.main.Cs2;
+								 File = Main.main.Cs2.getInt(ev.getPlayer().getName()+".Abilitys."+s+".Count");
 							}else{
-								 File = Main.main.Cs3;
+								 File = Main.main.Cs3.getInt(ev.getPlayer().getName()+".Abilitys."+s+".Count");
 							}
 					if(Main.main.Frdb2.getBoolean("config.CustomHeros.Abilitys."+s+".Multi")) {
-						ev.getPlayer().sendMessage(s);
-						PotionEffect Poition = new PotionEffect(PotionEffectType.getByName(s) ,20000,File.getInt(ev.getPlayer().getName()+".Abilitys"+s+".Count"));
+						if(!ev.getPlayer().hasPotionEffect(PotionEffectType.getByName(s))) {
+						PotionEffect Poition = new PotionEffect(PotionEffectType.getByName(s) ,20000,File);
 						ev.getPlayer().addPotionEffect(Poition);
-						
+						}
 						
 						
 						
 					}else {
+						if(!ev.getPlayer().hasPotionEffect(PotionEffectType.getByName(s))) {
 						PotionEffect Poition = new PotionEffect(PotionEffectType.getByName(s) ,20000,1);
 						ev.getPlayer().addPotionEffect(Poition);
 						
-						
+						}
 						
 						
 					}
@@ -524,6 +578,28 @@ public class HeroWorldEvent implements Listener{
 					
 					
 				}
+				Player p = ev.getPlayer();
+				String Owner;
+				ItemStack Head = new ItemStack(Material.PLAYER_HEAD);
+				SkullMeta HeadMeta = (SkullMeta) Head.getItemMeta();
+				if(Power.contains("Cs1")) {
+					 Owner = Main.main.Cs1.getString(p.getName()+".Owner");
+				}else if(Power.contains("Cs2")) {
+
+					 Owner = Main.main.Cs2.getString(p.getName()+".Owner");
+				}else {
+
+					 Owner = Main.main.Cs3.getString(p.getName()+".Owner");
+				}
+				HeadMeta.setOwner(Owner);
+				Head.setItemMeta(HeadMeta);
+				p.getInventory().setHelmet(Head);
+				
+				
+			
+				
+				
+				
 			}else {
 			if(main.Frdb2.getBoolean("Heros."+Power+".CanWalkOnWater")) {
 				Player p = ev.getPlayer();
@@ -537,7 +613,7 @@ public class HeroWorldEvent implements Listener{
 					}
 						
 					
-					
+		
 					
 				}
 			}

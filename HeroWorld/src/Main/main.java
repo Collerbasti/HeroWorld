@@ -53,7 +53,10 @@ public class main extends JavaPlugin implements Listener
 	public static File Temp;
 	public static FileConfiguration tmp;
 	
-	private static Economy econ = null;
+	public static File Kauf_;
+	public static FileConfiguration Kauf;
+	
+	public static Economy econ = null;
 	public static Economy economy;
 	
 	
@@ -63,7 +66,9 @@ public class main extends JavaPlugin implements Listener
 		
 		
 		if(!setupEconomy()) {
-			Bukkit.shutdown();
+			System.out.println("Vault System NICHT Geladen, bitte Prüfen");
+		}else{
+			System.out.println("Vault System  Geladen,dann kanst losgehen");
 		}
 		
 		
@@ -79,6 +84,11 @@ public class main extends JavaPlugin implements Listener
 		
 		main.Friends2 = new File("plugins/HeroWorld","FriendsDB.yml");
     	main.Frdb2 = YamlConfiguration.loadConfiguration(main.Friends2); 
+    	
+    	main.Kauf_ = new File("plugins/HeroWorld","Shop_Kauf.yml");
+    	main.Kauf = YamlConfiguration.loadConfiguration(main.Kauf_); 
+    	
+    	
     	
     	main.Shop = new File("plugins/HeroWorld","Shop.yml");
     	main.Shp = YamlConfiguration.loadConfiguration(main.Shop); 
@@ -115,6 +125,7 @@ public class main extends JavaPlugin implements Listener
 	public static void reload() {
 		main.Frdb2 = YamlConfiguration.loadConfiguration(main.Friends2);
 		main.Shp = YamlConfiguration.loadConfiguration(main.Shop); 
+		main.Kauf = YamlConfiguration.loadConfiguration(main.Kauf_);
     	main.Cs1 = YamlConfiguration.loadConfiguration(main.Custom1); 
     	main.Cs2 = YamlConfiguration.loadConfiguration(main.Custom2);
     	main.Cs3 = YamlConfiguration.loadConfiguration(main.Custom3); 
@@ -126,6 +137,13 @@ public class main extends JavaPlugin implements Listener
 		}
 		try {
 			Frdb2.save(Friends2);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			Kauf.save(Kauf_);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
